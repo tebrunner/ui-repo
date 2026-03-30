@@ -1,13 +1,13 @@
-import { forwardRef, type HTMLAttributes, type ReactNode } from "react"
+import { type ComponentPropsWithRef, type ReactNode } from "react"
 import { Cover } from "../layouts/cover"
 import { Center } from "../layouts/center"
 import { Stack } from "../layouts/stack"
 import { Cluster } from "../layouts/cluster"
-import { Container } from "../layouts/container"
+import { sectionSpacingMap } from "../layouts/_scale"
 import { ProfileHeader } from "../patterns/profile-header"
 import { cn } from "../lib/cn"
 
-export interface LinkInBioTemplateProps extends HTMLAttributes<HTMLDivElement> {
+export interface LinkInBioTemplateProps extends ComponentPropsWithRef<"div"> {
   /** Profile avatar or image */
   avatar?: ReactNode
   /** Name / heading */
@@ -22,44 +22,50 @@ export interface LinkInBioTemplateProps extends HTMLAttributes<HTMLDivElement> {
   background?: ReactNode
 }
 
-export const LinkInBioTemplate = forwardRef<HTMLDivElement, LinkInBioTemplateProps>(
-  ({ avatar, heading, description, socialLinks, links, background, className, ...props }, ref) => {
-    return (
-      <Cover
-        ref={ref}
-        minHeight="screen"
-        className={cn("bg-background text-foreground relative overflow-hidden", className)}
-        {...props}
-      >
-        {background}
+export function LinkInBioTemplate({
+  avatar,
+  heading,
+  description,
+  socialLinks,
+  links,
+  background,
+  className,
+  ref,
+  ...props
+}: LinkInBioTemplateProps) {
+  return (
+    <Cover
+      ref={ref}
+      minHeight="screen"
+      className={cn("bg-background text-foreground relative overflow-hidden", className)}
+      {...props}
+    >
+      {background}
 
-        <Center max="xl" gutter className="relative z-10">
-        <Container width="full" px="none" section="sm">
-          <Stack gap="xl" align="center">
-            <ProfileHeader
-              avatar={avatar}
-              heading={heading}
-              description={description}
-            />
+      <Center max="xl" gutter className={cn("relative z-10", sectionSpacingMap["sm"])}>
+        <Stack gap="xl" align="center">
+          <ProfileHeader
+            avatar={avatar}
+            heading={heading}
+            description={description}
+          />
 
-            {/* Social icons */}
-            {socialLinks && (
-              <Cluster gap="md" justify="center">
-                {socialLinks}
-              </Cluster>
-            )}
+          {/* Social icons */}
+          {socialLinks && (
+            <Cluster gap="md" justify="center">
+              {socialLinks}
+            </Cluster>
+          )}
 
-            {/* Main links */}
-            {links && (
-              <Stack gap="md" className="w-full">
-                {links}
-              </Stack>
-            )}
-          </Stack>
-        </Container>
-        </Center>
-      </Cover>
-    )
-  }
-)
+          {/* Main links */}
+          {links && (
+            <Stack gap="md" className="w-full">
+              {links}
+            </Stack>
+          )}
+        </Stack>
+      </Center>
+    </Cover>
+  )
+}
 LinkInBioTemplate.displayName = "LinkInBioTemplate"

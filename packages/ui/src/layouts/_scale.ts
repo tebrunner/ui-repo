@@ -18,6 +18,7 @@
  *
  * Changelog:
  *   2026-03-29 — initial: gap, padding, margin, width, measure, section
+ *   2026-03-30 — add CenterMax (fine-grained max-width for Center), GUTTER constant
  */
 
 // ─────────────────────────────────────────────
@@ -119,6 +120,39 @@ export const containerWidthMap: Record<ContainerWidth, string> = {
 }
 
 // ─────────────────────────────────────────────
+// CENTER MAX-WIDTH — fine-grained max-width for Center
+//
+// Different from ContainerWidth: this uses Tailwind's raw
+// max-w-* values for precise width control at any level
+// (components, text blocks, marketing sections).
+// ContainerWidth is a semantic page-level scale with
+// fewer, larger steps.
+//
+// Both scales live here so drift between them is visible.
+// ─────────────────────────────────────────────
+
+export type CenterMax =
+  | "xs" | "sm" | "md" | "lg" | "xl"
+  | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl"
+  | "prose" | "full"
+
+export const centerMaxMap: Record<CenterMax, string> = {
+  xs:    "max-w-xs",       // 320px
+  sm:    "max-w-sm",       // 384px
+  md:    "max-w-md",       // 448px
+  lg:    "max-w-lg",       // 512px
+  xl:    "max-w-xl",       // 576px
+  "2xl": "max-w-2xl",     // 672px
+  "3xl": "max-w-3xl",     // 768px
+  "4xl": "max-w-4xl",     // 896px
+  "5xl": "max-w-5xl",     // 1024px
+  "6xl": "max-w-6xl",     // 1152px
+  "7xl": "max-w-7xl",     // 1280px
+  prose: "max-w-prose",    // ~65ch
+  full:  "max-w-full",     // 100%
+}
+
+// ─────────────────────────────────────────────
 // CONTENT MEASURE — max-width for readable text
 //
 // Distinct from container width. This governs how
@@ -171,6 +205,17 @@ export const gridMinValues: readonly GridMin[] = [
   "25rem",
   "30rem",
 ] as const
+
+// ─────────────────────────────────────────────
+// GUTTER — responsive horizontal padding for
+// viewport-edge breathing room
+//
+// Used by Center's `gutter` prop. Defined here
+// so the value is part of the spatial vocabulary,
+// not hardcoded in a component.
+// ─────────────────────────────────────────────
+
+export const GUTTER = "px-4 sm:px-6"
 
 // ─────────────────────────────────────────────
 // HELPERS — composition utilities

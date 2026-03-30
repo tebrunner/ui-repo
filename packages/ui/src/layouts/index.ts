@@ -1,4 +1,4 @@
-export { type Gap, type GridMin } from "./_scale"
+export { type Gap, type GridMin, type CenterMax } from "./_scale"
 export { Stack, type StackProps } from "./stack"
 export { Cluster, type ClusterProps } from "./cluster"
 export { Split, type SplitProps } from "./split"
