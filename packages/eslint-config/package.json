@@ -1,0 +1,14 @@
+{
+  "name": "@repo/eslint-config",
+  "version": "0.0.0",
+  "private": true,
+  "files": ["index.js"],
+  "devDependencies": {
+    "eslint": "catalog:",
+    "eslint-config-next": "catalog:",
+    "eslint-plugin-react": "catalog:",
+    "eslint-plugin-react-hooks": "catalog:",
+    "@typescript-eslint/eslint-plugin": "catalog:",
+    "@typescript-eslint/parser": "catalog:"
+  }
+}

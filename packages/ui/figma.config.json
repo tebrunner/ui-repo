@@ -1,0 +1,15 @@
+{
+  "codeConnect": {
+    "include": ["src/**/*.figma.tsx"],
+    "react": {
+      "importPaths": {
+        "@repo/ui/layouts": "src/layouts/*",
+        "@repo/ui/patterns": "src/patterns/*",
+        "@repo/ui/templates": "src/templates/*",
+        "@repo/ui/primitives": "src/primitives/*",
+        "@repo/ui/composites": "src/composites/*",
+        "@repo/ui/blocks": "src/blocks/*"
+      }
+    }
+  }
+}

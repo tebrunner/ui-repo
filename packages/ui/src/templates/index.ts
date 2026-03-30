@@ -1,0 +1,6 @@
+export { AppTemplate, type AppTemplateProps } from "./app-template"
+export { AuthTemplate, type AuthTemplateProps } from "./auth-template"
+export { DataTemplate, type DataTemplateProps } from "./data-template"
+export { MarketingTemplate, type MarketingTemplateProps } from "./marketing-template"
+export { DashboardTemplate, type DashboardTemplateProps } from "./dashboard-template"
+export { LinkInBioTemplate, type LinkInBioTemplateProps } from "./link-in-bio-template"
