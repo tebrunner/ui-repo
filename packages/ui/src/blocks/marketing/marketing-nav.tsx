@@ -1,6 +1,18 @@
+"use client"
+
 import { type ReactNode } from "react"
-import { Cluster } from "../../layouts/cluster"
+import { Hamburger } from "@repo/ui/composites"
+import { useState } from "react"
+import { Cluster, Stack } from "@repo/ui/layouts"
 import { cn } from "../../lib/cn"
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
+  NavigationMenuLink,
+} from "../../primitives/navigation-menu"
 
 export type NavLink = {
   label: string
@@ -31,98 +43,126 @@ export interface MarketingNavProps {
 
 export function MarketingNav({
   logo,
-  links = [],
+  links = [ { label: "Home", href: "/" } ],
   groups = [],
   actions,
   mobileMenu,
   pathname,
   className,
 }: MarketingNavProps) {
-  return (
-    <nav
-      className={cn(
-        "flex w-full items-center justify-between",
-        className,
-      )}
-    >
-      {/* Left: Logo */}
-      <div className="flex-shrink-0 flex">{logo}</div>
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-      {/* Center: Navigation links */}
-      {(links.length > 0 || groups.length > 0) && (
-        <Cluster gap="lg" className="hidden md:flex">
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className={cn(
-                "text-sm font-medium transition-colors hover:text-foreground",
-                pathname === link.href
-                  ? "text-foreground"
-                  : "text-muted-foreground",
-              )}
-              {...(link.external && {
-                target: "_blank",
-                rel: "noopener noreferrer",
-              })}
-            >
-              {link.label}
-            </a>
-          ))}
-          {groups.map((group) => (
-            <NavDropdown key={group.label} group={group} />
-          ))}
-        </Cluster>
-      )}
-
-      {/* Right: Actions + mobile menu */}
-      <Cluster gap="sm" className="flex-shrink-0">
-        {actions && <div className="hidden sm:flex items-center gap-2">{actions}</div>}
-        {mobileMenu && <div className="md:hidden">{mobileMenu}</div>}
-      </Cluster>
-    </nav>
+  const defaultMobileMenu = (
+    <Hamburger
+      open={mobileMenuOpen}
+      onOpenChange={setMobileMenuOpen}
+    />
   )
-}
 
-function NavDropdown({ group }: { group: NavGroup }) {
   return (
-    <div className="relative group">
-      <button className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1">
-        {group.label}
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
-          fill="none"
-          className="transition-transform group-hover:rotate-180"
-          aria-hidden="true"
-        >
-          <path
-            d="M3 4.5L6 7.5L9 4.5"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </button>
-      <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-        <div className="rounded-lg border border-border bg-popover p-1 shadow-md min-w-[180px]">
-          {group.links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="block rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-              {...(link.external && {
-                target: "_blank",
-                rel: "noopener noreferrer",
-              })}
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-      </div>
+    <div className={cn("relative w-full", className)}>
+      <Cluster
+        as="nav"
+        justify="between"
+        align="center"
+        gap="lg"
+        className="w-full"
+      >
+        {/* Left: Logo */}
+        <div className="flex-shrink-0">{logo}</div>
+
+        {/* Center: Navigation links */}
+        {(links.length > 0 || groups.length > 0) && (
+          <NavigationMenu className="hidden md:flex">
+            <NavigationMenuList>
+              {links.map((link) => (
+                <NavigationMenuItem key={link.href}>
+                  <a
+                    href={link.href}
+                    className={cn(
+                      "text-sm font-medium transition-colors px-4 py-2 rounded-md",
+                      pathname === link.href
+                        ? "text-foreground bg-accent/50"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent/30"
+                    )}
+                    {...(link.external && {
+                      target: "_blank",
+                      rel: "noopener noreferrer",
+                    })}
+                  >
+                    {link.label}
+                  </a>
+                </NavigationMenuItem>
+              ))}
+              {groups.map((group) => (
+                <NavigationMenuItem key={group.label}>
+                  <NavigationMenuTrigger>{group.label}</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[180px] gap-1 p-1">
+                      {group.links.map((link) => (
+                        <li key={link.href}>
+                          <NavigationMenuLink asChild>
+                            <a
+                              href={link.href}
+                              {...(link.external && {
+                                target: "_blank",
+                                rel: "noopener noreferrer",
+                              })}
+                            >
+                              {link.label}
+                            </a>
+                          </NavigationMenuLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+        )}
+
+        {/* Right: Actions + mobile menu */}
+        <Cluster gap="sm" className="flex-shrink-0">
+          {actions && <div className="hidden sm:flex">{actions}</div>}
+          {(mobileMenu || defaultMobileMenu) && (
+            <div className="md:hidden">{mobileMenu || defaultMobileMenu}</div>
+          )}
+        </Cluster>
+      </Cluster>
+
+      {/* Mobile menu dropdown */}
+   {/* Mobile menu dropdown */}
+  {mobileMenuOpen && (
+    <div className={cn(
+      "md:hidden absolute top-full left-0 right-0 z-50",
+      "bg-background border-b border-border",
+      "shadow-lg", // Add shadow
+      "animate-in fade-in slide-in-from-top-2 duration-200", // Smooth animation
+    )}>
+      <Stack gap="xs" className="p-4">
+        {links.map((link) => (
+          <a
+            key={link.href}
+            href={link.href}
+            className={cn(
+              "px-3 py-2 rounded-md transition-colors",
+              "text-sm font-medium",
+              "text-muted-foreground hover:text-foreground",
+              "hover:bg-accent/50", // Better hover state
+            )}
+            {...(link.external && {
+              target: "_blank",
+              rel: "noopener noreferrer",
+            })}
+          >
+            {link.label}
+          </a>
+        ))}
+        {/* groups... */}
+      </Stack>
+    </div>
+  )}
     </div>
   )
 }

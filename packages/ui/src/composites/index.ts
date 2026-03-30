@@ -9,3 +9,4 @@ export {
 export { ThemeProvider } from "./theme-provider"
 
 export * from "./svg-99xsjan0kt"
+export * from "./hamburger"

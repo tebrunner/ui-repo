@@ -4,8 +4,8 @@
 import type { NavLink, NavGroup } from "@repo/ui/blocks"
 
 export const marketingLinks: NavLink[] = [
-  { label: "Features", href: "/features" },
-  { label: "Pricing", href: "/pricing" },
+  { label: "Features", href: "#features" },
+  { label: "Pricing", href: "#pricing" },
   { label: "Blog", href: "/blog" },
 ]
 
