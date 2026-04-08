@@ -2,25 +2,37 @@ import { type ComponentPropsWithRef, type ReactNode } from "react"
 import { Cover, type CoverProps } from "../layouts/cover"
 import { Stack } from "../layouts/stack"
 import { Center } from "../layouts/center"
-import { centerMaxMap, type CenterMax } from "../layouts/_scale"
-import { cn } from "../lib/cn"
+import { type CenterMax } from "../layouts/_scale"
+import { cn } from "../lib/"
 
-/** Subset of CenterMax values appropriate for an auth card. */
-type AuthCardWidth = Extract<CenterMax, "xs" | "sm" | "md" | "lg" | "xl">
+/** Subset of CenterMax values appropriate for auth flows */
+type AuthWidth = Extract<CenterMax, "xs" | "sm" | "md" | "lg" | "xl">
 
 export interface AuthTemplateProps extends ComponentPropsWithRef<"div"> {
   /** Logo or branding — rendered above the card */
   logo?: ReactNode
-  /** Auth card content — vertically and horizontally centered */
+  /** Main content (forms, messages, etc.) */
   children: ReactNode
-  /** Footer content (legal links, sign-up CTA) — below the card */
+  /** Footer content (legal links, secondary CTAs) */
   footer?: ReactNode
-  /** Max-width of the centered card area. Default "sm" (384px). */
-  maxWidth?: AuthCardWidth
-  /** Cover height strategy. Default "screen" (100vh). */
+  /** Max width of the content column. Default `"sm"` (384px). */
+  maxWidth?: AuthWidth
+  /** Cover height strategy. Default `"screen"` (100vh). */
   minHeight?: CoverProps["minHeight"]
 }
 
+/**
+ * AuthTemplate
+ *
+ * A vertically-centered, width-constrained layout for
+ * authentication flows (login, signup, reset password).
+ *
+ * Rules:
+ * 1. Layout only — do not embed auth logic or specific forms.
+ * 2. Content should fit within a narrow column.
+ * 3. Vertical rhythm is owned by Stack.
+ * 4. Use AuthCard (optional) for consistent surface styling.
+ */
 export function AuthTemplate({
   logo,
   children,
@@ -38,20 +50,21 @@ export function AuthTemplate({
       className={cn("bg-muted/20", className)}
       {...props}
     >
-      <Center max="full" gutter className={centerMaxMap[maxWidth]}>
+      <Center max={maxWidth} gutter>
         <Stack gap="lg">
-          {logo && (
-            <div className="text-center">{logo}</div>
-          )}
-          {children}
+          {logo && <header className="text-center">{logo}</header>}
+
+          <main>{children}</main>
+
           {footer && (
-            <div className="text-center text-sm text-muted-foreground">
+            <footer className="text-center text-sm text-muted-foreground">
               {footer}
-            </div>
+            </footer>
           )}
         </Stack>
       </Center>
     </Cover>
   )
 }
+
 AuthTemplate.displayName = "AuthTemplate"
